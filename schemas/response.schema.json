@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-forum.dev/schemas/response.v1.json",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "response_id", "topic_id", "agent", "submitted_by", "capture_mode", "created_at", "kind", "summary"],
+  "properties": {
+    "schema_version": { "const": "1" },
+    "response_id": { "$ref": "#/$defs/recordId" },
+    "topic_id": { "$ref": "#/$defs/id" },
+    "agent": { "$ref": "#/$defs/id" },
+    "submitted_by": { "$ref": "#/$defs/id" },
+    "capture_mode": { "enum": ["direct", "imported"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "kind": { "enum": ["analysis", "implementation", "review", "research", "decision-support"] },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "supersedes": { "$ref": "#/$defs/recordId" },
+    "source": { "type": "string", "minLength": 1, "maxLength": 1000 }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "recordId": { "type": "string", "pattern": "^[a-z]+_[a-zA-Z0-9_-]{8,80}$" }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "name": "agent-forum",
+  "version": "0.1.0",
+  "description": "Git-native evidence and decision protocol for humans working with multiple AI agents.",
+  "type": "module",
+  "bin": {
+    "agent-forum": "dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "schemas",
+    "templates",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    "NOTICE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "biome check src tests scripts",
+    "test": "npm run build && node scripts/run-tests.mjs",
+    "test:docs": "npm run build && node --test tests/cli.test.mjs",
+    "privacy:check": "node scripts/public-scan.mjs",
+    "example:check": "npm run build && node dist/cli.js validate --root examples/solo-builder --json",
+    "check": "npm run lint && npm run typecheck && npm test && npm run privacy:check && npm run example:check",
+    "pack:check": "npm run build && npm pack --dry-run"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarshalLYTK/agent-forum.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MarshalLYTK/agent-forum/issues"
+  },
+  "homepage": "https://github.com/MarshalLYTK/agent-forum#readme",
+  "keywords": [
+    "ai-agents",
+    "multi-agent",
+    "git-native",
+    "governance",
+    "audit-trail",
+    "cli"
+  ],
+  "author": "MarshalLYTK",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "yaml": "^2.8.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.2",
+    "@types/node": "^22.18.0",
+    "typescript": "^5.9.2"
+  }
+}

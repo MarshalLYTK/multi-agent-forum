@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-forum.dev/schemas/forum.v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "protocol_version", "forum_id", "name", "owner", "created_at", "permissions"],
+  "properties": {
+    "schema_version": { "const": "1" },
+    "protocol_version": { "const": "1" },
+    "forum_id": { "$ref": "#/$defs/id" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "owner": { "$ref": "#/$defs/id" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "repository": { "type": "string", "maxLength": 500 },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topics", "responses", "receipts", "actions", "resolutions", "structure", "main_push", "credentials"],
+      "properties": {
+        "topics": { "enum": ["read", "create"] },
+        "responses": { "enum": ["denied", "create"] },
+        "receipts": { "enum": ["denied", "create"] },
+        "actions": { "enum": ["denied", "propose"] },
+        "resolutions": { "enum": ["denied", "owner-only"] },
+        "structure": { "enum": ["denied", "owner-only"] },
+        "main_push": { "enum": ["denied", "owner-only"] },
+        "credentials": { "const": "denied" }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-forum.dev/schemas/invitation.v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "invitation_id", "forum_id", "protocol_version", "repository", "scope", "created_by", "created_at", "expires_at", "status", "digest"],
+  "properties": {
+    "schema_version": { "const": "1" },
+    "invitation_id": { "$ref": "#/$defs/recordId" },
+    "forum_id": { "$ref": "#/$defs/id" },
+    "protocol_version": { "const": "1" },
+    "repository": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "scope": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "created_by": { "$ref": "#/$defs/id" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["active", "revoked"] },
+    "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "recordId": { "type": "string", "pattern": "^[a-z]+_[a-zA-Z0-9_-]{8,80}$" }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-forum.dev/schemas/action.v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "action_id", "topic_id", "title", "owner", "created_by", "status", "created_at", "updated_at"],
+  "properties": {
+    "schema_version": { "const": "1" },
+    "action_id": { "$ref": "#/$defs/recordId" },
+    "topic_id": { "$ref": "#/$defs/id" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 300 },
+    "owner": { "$ref": "#/$defs/id" },
+    "created_by": { "$ref": "#/$defs/id" },
+    "status": { "enum": ["proposed", "ready", "doing", "waiting", "done", "cancelled"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "source_resolution": { "$ref": "#/$defs/recordId" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "recordId": { "type": "string", "pattern": "^[a-z]+_[a-zA-Z0-9_-]{8,80}$" }
+  }
+}

@@ -1,0 +1,7 @@
+src/
+tests/
+scripts/
+.github/
+docs/
+biome.json
+tsconfig*.json

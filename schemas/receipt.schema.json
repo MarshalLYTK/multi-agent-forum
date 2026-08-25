@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-forum.dev/schemas/receipt.v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agent", "summary", "evidence", "outcome", "work_status", "next_owner", "next_step", "confidence"],
+  "properties": {
+    "agent": { "$ref": "#/$defs/id" },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "evidence": { "type": "string", "minLength": 1, "maxLength": 20000 },
+    "outcome": { "type": "string", "minLength": 1, "maxLength": 20000 },
+    "work_status": { "enum": ["completed", "partial", "blocked", "waiting", "no-change"] },
+    "next_owner": { "enum": ["agent", "human", "external", "none"] },
+    "next_step": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "confidence": { "enum": ["high", "medium", "low"] },
+    "source_artifact": { "type": "string", "minLength": 1, "maxLength": 1000 },
+    "source_session_id": { "type": "string", "minLength": 1, "maxLength": 500 }
+  },
+  "anyOf": [
+    { "required": ["source_artifact"] },
+    { "required": ["source_session_id"] }
+  ],
+  "$defs": { "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" } }
+}

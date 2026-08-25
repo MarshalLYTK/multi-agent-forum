@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-forum.dev/schemas/status.v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "topic_id", "state", "owner", "resolution_owner", "updated_at"],
+  "properties": {
+    "schema_version": { "const": "1" },
+    "topic_id": { "$ref": "#/$defs/id" },
+    "state": { "enum": ["open", "in_review", "resolved", "archived", "blocked"] },
+    "owner": { "$ref": "#/$defs/id" },
+    "resolution_owner": { "$ref": "#/$defs/id" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "resolved_at": { "type": "string", "format": "date-time" },
+    "current_resolution": { "$ref": "#/$defs/recordId" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "recordId": { "type": "string", "pattern": "^[a-z]+_[a-zA-Z0-9_-]{8,80}$" }
+  }
+}

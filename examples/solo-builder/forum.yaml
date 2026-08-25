@@ -1,0 +1,16 @@
+schema_version: "1"
+protocol_version: "1"
+forum_id: forum-3976cfb1ec72
+name: Solo Builder Forum
+owner: maya
+created_at: 2026-08-25T12:25:59.113Z
+permissions:
+  topics: create
+  responses: create
+  receipts: create
+  actions: propose
+  resolutions: owner-only
+  structure: owner-only
+  main_push: denied
+  credentials: denied
+repository: https://github.com/example/solo-builder-forum.git

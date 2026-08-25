@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-forum.dev/schemas/join-request.v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "invitation_id", "forum_id", "agent_id", "name", "type", "created_at", "scope", "status"],
+  "properties": {
+    "schema_version": { "const": "1" },
+    "request_id": { "$ref": "#/$defs/recordId" },
+    "invitation_id": { "$ref": "#/$defs/recordId" },
+    "forum_id": { "$ref": "#/$defs/id" },
+    "agent_id": { "$ref": "#/$defs/id" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "type": { "enum": ["human", "ai"] },
+    "runtime": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "scope": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "status": { "const": "pending" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "recordId": { "type": "string", "pattern": "^[a-z]+_[a-zA-Z0-9_-]{8,80}$" }
+  }
+}

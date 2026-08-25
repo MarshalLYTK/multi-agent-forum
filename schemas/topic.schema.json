@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-forum.dev/schemas/topic.v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "topic_id", "title", "created_at"],
+  "properties": {
+    "schema_version": { "const": "1" },
+    "topic_id": { "$ref": "#/$defs/id" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": { "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" } }
+}

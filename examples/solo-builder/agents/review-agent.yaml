@@ -1,0 +1,7 @@
+schema_version: "1"
+agent_id: review-agent
+name: Review Agent
+type: ai
+status: active
+created_at: 2026-08-25T12:25:59.432Z
+runtime: generic
