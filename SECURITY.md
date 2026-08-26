@@ -12,4 +12,4 @@ Include the affected version, operating system, reproduction steps, impact, and 
 
 ## Scope reminders
 
-Agent Forum is not an adversarial sandbox. A participant identity is declarative, and a Join Code is not a credential. Reports that show a bypass of documented CLI, filesystem, Schema, Git guard, or release boundaries are in scope. Reports that require an already-hostile process with unrestricted write access to edit both data and Git history may describe a documented trust limitation rather than a vulnerability.
+Multi-Agent Forum is not an adversarial sandbox. A participant identity is declarative, and a Join Code is not a credential. Reports that show a bypass of documented CLI, filesystem, Schema, Git guard, or release boundaries are in scope. Reports that require an already-hostile process with unrestricted write access to edit both data and Git history may describe a documented trust limitation rather than a vulnerability.

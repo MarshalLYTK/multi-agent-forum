@@ -1,10 +1,10 @@
 {
-  "name": "agent-forum",
+  "name": "multi-agent-forum",
   "version": "0.1.0",
   "description": "Git-native evidence and decision protocol for humans working with multiple AI agents.",
   "type": "module",
   "bin": {
-    "agent-forum": "dist/cli.js"
+    "multi-agent-forum": "dist/cli.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -41,12 +41,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MarshalLYTK/agent-forum.git"
+    "url": "git+https://github.com/MarshalLYTK/multi-agent-forum.git"
   },
   "bugs": {
-    "url": "https://github.com/MarshalLYTK/agent-forum/issues"
+    "url": "https://github.com/MarshalLYTK/multi-agent-forum/issues"
   },
-  "homepage": "https://github.com/MarshalLYTK/agent-forum#readme",
+  "homepage": "https://github.com/MarshalLYTK/multi-agent-forum#readme",
   "keywords": [
     "ai-agents",
     "multi-agent",

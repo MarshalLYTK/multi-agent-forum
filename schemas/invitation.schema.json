@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agent-forum.dev/schemas/invitation.v1.json",
+  "$id": "https://multi-agent-forum.dev/schemas/invitation.v1.json",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "invitation_id", "forum_id", "protocol_version", "repository", "scope", "created_by", "created_at", "expires_at", "status", "digest"],

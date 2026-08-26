@@ -22,8 +22,8 @@
 
 1. Create signed or GitHub-generated tag `v0.1.0` from accepted `main`.
 2. Publish the GitHub Release with CHANGELOG content.
-3. Let the release workflow build and upload `agent-forum-0.1.0.tgz`.
+3. Let the release workflow build and upload `multi-agent-forum-0.1.0.tgz`.
 4. Install the public asset into a clean temporary directory.
-5. Run `agent-forum --version` and the README quickstart.
+5. Run `multi-agent-forum --version` and the README quickstart.
 
 npm registry publication is a separate external action and is not implied by a GitHub Release.

@@ -42,9 +42,11 @@ async function invitationFixture() {
 
 test("rejects a tampered Join Code and a revoked invitation", async () => {
   const { root, invitation } = await invitationFixture();
-  const decoded = JSON.parse(Buffer.from(invitation.code.slice(4), "base64url").toString("utf8"));
+  const decoded = JSON.parse(
+    Buffer.from(invitation.code.slice("MAF1_".length), "base64url").toString("utf8"),
+  );
   decoded.payload.scope = "resolutions:create";
-  const tampered = `AF1_${Buffer.from(JSON.stringify(decoded)).toString("base64url")}`;
+  const tampered = `MAF1_${Buffer.from(JSON.stringify(decoded)).toString("base64url")}`;
   await assert.rejects(
     () =>
       joinForum(root, {
@@ -53,7 +55,7 @@ test("rejects a tampered Join Code and a revoked invitation", async () => {
         name: "Researcher",
         type: "ai",
       }),
-    (error) => error.code === "AF_INVITE_TAMPERED",
+    (error) => error.code === "MAF_INVITE_TAMPERED",
   );
 
   await revokeInvitation(root, invitation.invitation_id);
@@ -65,13 +67,15 @@ test("rejects a tampered Join Code and a revoked invitation", async () => {
         name: "Researcher",
         type: "ai",
       }),
-    (error) => error.code === "AF_INVITE_REVOKED",
+    (error) => error.code === "MAF_INVITE_REVOKED",
   );
 });
 
 test("rejects an expired invitation", async () => {
   const { root, invitation } = await invitationFixture();
-  const decoded = JSON.parse(Buffer.from(invitation.code.slice(4), "base64url").toString("utf8"));
+  const decoded = JSON.parse(
+    Buffer.from(invitation.code.slice("MAF1_".length), "base64url").toString("utf8"),
+  );
   decoded.payload.expires_at = "2000-01-01T00:00:00.000Z";
   decoded.digest = createHash("sha256").update(JSON.stringify(decoded.payload)).digest("hex");
   const invitationPath = join(root, "invitations", `${invitation.invitation_id}.yaml`);
@@ -79,7 +83,7 @@ test("rejects an expired invitation", async () => {
     invitationPath,
     YAML.stringify({ ...decoded.payload, status: "active", digest: decoded.digest }),
   );
-  const expired = `AF1_${Buffer.from(JSON.stringify(decoded)).toString("base64url")}`;
+  const expired = `MAF1_${Buffer.from(JSON.stringify(decoded)).toString("base64url")}`;
   await assert.rejects(
     () =>
       joinForum(root, {
@@ -88,7 +92,7 @@ test("rejects an expired invitation", async () => {
         name: "Researcher",
         type: "ai",
       }),
-    (error) => error.code === "AF_INVITE_EXPIRED",
+    (error) => error.code === "MAF_INVITE_EXPIRED",
   );
 });
 
@@ -139,7 +143,7 @@ test("rejects absolute source paths in imported receipts", async () => {
   );
   await assert.rejects(
     () => importReceipt(root, { topicId: "import", input: receiptPath, submittedBy: "owner" }),
-    (error) => error.code === "AF_ABSOLUTE_SOURCE",
+    (error) => error.code === "MAF_ABSOLUTE_SOURCE",
   );
 });
 

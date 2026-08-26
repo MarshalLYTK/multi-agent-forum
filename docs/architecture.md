@@ -1,6 +1,6 @@
 # Architecture
 
-Agent Forum is a local file protocol with a thin CLI. Git provides versioning and transport; GitHub is optional enforcement and collaboration infrastructure.
+Multi-Agent Forum is a local file protocol with a thin CLI. Git provides versioning and transport; GitHub is optional enforcement and collaboration infrastructure.
 
 ```text
 Agent or human

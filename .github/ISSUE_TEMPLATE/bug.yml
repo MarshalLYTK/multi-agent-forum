@@ -9,7 +9,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Agent Forum version
+      label: Multi-Agent Forum version
       placeholder: 0.1.0
     validations:
       required: true

@@ -82,11 +82,11 @@ async function loadAgent(root: string, agentId: string): Promise<AgentRecord> {
   assertIdentifier(agentId, "agent id");
   const path = safePath(root, "agents", `${agentId}.yaml`);
   if (!(await pathExists(path)))
-    throw new ForumError("AF_AGENT_MISSING", `agent not found: ${agentId}`, 2);
+    throw new ForumError("MAF_AGENT_MISSING", `agent not found: ${agentId}`, 2);
   const agent = await readYaml<AgentRecord>(path);
   assertSchema("agent", agent, path);
   if (agent.status !== "active") {
-    throw new ForumError("AF_AGENT_INACTIVE", `agent is not active: ${agentId}`, 2);
+    throw new ForumError("MAF_AGENT_INACTIVE", `agent is not active: ${agentId}`, 2);
   }
   return agent;
 }
@@ -105,7 +105,7 @@ async function loadTopic(
 }> {
   const directory = topicDirectory(root, topicId);
   if (!(await pathExists(directory)))
-    throw new ForumError("AF_TOPIC_MISSING", `topic not found: ${topicId}`, 2);
+    throw new ForumError("MAF_TOPIC_MISSING", `topic not found: ${topicId}`, 2);
   const topic = await readYaml<TopicRecord>(safePath(directory, "topic.yaml"));
   const status = await readYaml<TopicStatusRecord>(safePath(directory, "status.yaml"));
   assertSchema("topic", topic, `${topicId}/topic.yaml`);
@@ -116,7 +116,7 @@ async function loadTopic(
 function assertTopicWritable(status: TopicStatusRecord, operation: string): void {
   if (status.state === "resolved" || status.state === "archived") {
     throw new ForumError(
-      "AF_TOPIC_CLOSED",
+      "MAF_TOPIC_CLOSED",
       `${operation} is not allowed while topic ${status.topic_id} is ${status.state}`,
       2,
     );
@@ -137,7 +137,7 @@ export async function initForum(options: {
   if (existed) {
     const entries = await readdir(target);
     if (entries.some((entry) => entry !== ".git")) {
-      throw new ForumError("AF_INIT_NOT_EMPTY", `target directory is not empty: ${target}`, 2);
+      throw new ForumError("MAF_INIT_NOT_EMPTY", `target directory is not empty: ${target}`, 2);
     }
   } else {
     await mkdir(target, { recursive: true });
@@ -171,7 +171,7 @@ export async function initForum(options: {
     }
     await writeYamlNew(safePath(target, "forum.yaml"), forum);
     await writeYamlNew(safePath(target, "agents", `${owner}.yaml`), ownerRecord);
-    await writeNew(safePath(target, ".gitignore"), ".agent-forum-local/\n.DS_Store\n*.log\n");
+    await writeNew(safePath(target, ".gitignore"), ".multi-agent-forum-local/\n.DS_Store\n*.log\n");
     const templatePath = fileURLToPath(
       new URL("../templates/default/FORUM_README.md", import.meta.url),
     );
@@ -269,7 +269,7 @@ export async function createTopic(
   await loadAgent(root, options.resolutionOwner);
   const target = topicDirectory(root, id);
   if (await pathExists(target))
-    throw new ForumError("AF_TOPIC_EXISTS", `topic already exists: ${id}`, 2);
+    throw new ForumError("MAF_TOPIC_EXISTS", `topic already exists: ${id}`, 2);
   const temporary = safePath(root, "topics", `.tmp-${id}-${Date.now()}`);
   const createdAt = nowIso();
   const topic: TopicRecord = {
@@ -394,7 +394,7 @@ export async function importReceipt(
     if (!isRecord(parsed)) throw new Error("receipt must be an object");
     receipt = parsed;
   } catch (error) {
-    throw new ForumError("AF_RECEIPT_JSON", `invalid receipt JSON: ${String(error)}`, 2);
+    throw new ForumError("MAF_RECEIPT_JSON", `invalid receipt JSON: ${String(error)}`, 2);
   }
   assertSchema("receipt", receipt, "receipt input");
   const workingAgent = requireString(receipt.agent, "receipt.agent");
@@ -441,7 +441,7 @@ export async function resolveTopic(
   assertTopicWritable(status, "resolution creation");
   if (options.owner !== status.resolution_owner) {
     throw new ForumError(
-      "AF_RESOLUTION_OWNER",
+      "MAF_RESOLUTION_OWNER",
       `resolution owner is ${status.resolution_owner}, not ${options.owner}`,
       2,
     );
@@ -497,11 +497,11 @@ export async function createAction(
   const { root } = await loadForum(start);
   const { directory, status } = await loadTopic(root, options.topicId);
   if (status.state === "archived") {
-    throw new ForumError("AF_TOPIC_ARCHIVED", "cannot create an action in an archived topic", 2);
+    throw new ForumError("MAF_TOPIC_ARCHIVED", "cannot create an action in an archived topic", 2);
   }
   if (status.state === "resolved" && options.sourceResolution !== status.current_resolution) {
     throw new ForumError(
-      "AF_ACTION_RESOLUTION",
+      "MAF_ACTION_RESOLUTION",
       "an action added after resolution must reference the current resolution",
       2,
     );
@@ -548,14 +548,14 @@ export async function updateAction(
   const { directory } = await loadTopic(root, options.topicId);
   const target = safePath(directory, "actions", `${options.actionId}.md`);
   if (!(await pathExists(target))) {
-    throw new ForumError("AF_ACTION_MISSING", `action not found: ${options.actionId}`, 2);
+    throw new ForumError("MAF_ACTION_MISSING", `action not found: ${options.actionId}`, 2);
   }
   const parsed = parseMarkdown(await readTextLimited(target), relative(root, target));
   assertSchema("action", parsed.metadata, relative(root, target));
   const current = parsed.metadata.status as ActionStatus;
   if (current !== options.status && !transitions[current].includes(options.status)) {
     throw new ForumError(
-      "AF_ACTION_TRANSITION",
+      "MAF_ACTION_TRANSITION",
       `invalid action transition: ${current} -> ${options.status}`,
       2,
     );
@@ -589,7 +589,7 @@ export async function createInvitation(
   await loadAgent(root, options.createdBy);
   const repository = options.repository ?? forum.repository;
   if (!repository) {
-    throw new ForumError("AF_REPOSITORY_REQUIRED", "repository is required for an invitation", 2);
+    throw new ForumError("MAF_REPOSITORY_REQUIRED", "repository is required for an invitation", 2);
   }
   const payload = {
     schema_version: SCHEMA_VERSION,
@@ -617,7 +617,7 @@ export async function revokeInvitation(
   const { root } = await loadForum(start);
   const target = safePath(root, "invitations", `${invitationId}.yaml`);
   if (!(await pathExists(target))) {
-    throw new ForumError("AF_INVITATION_MISSING", `invitation not found: ${invitationId}`, 2);
+    throw new ForumError("MAF_INVITATION_MISSING", `invitation not found: ${invitationId}`, 2);
   }
   const record = await readYaml<Record<string, unknown>>(target);
   assertSchema("invitation", record, relative(root, target));
@@ -634,32 +634,32 @@ export async function joinForum(
   const { root, forum } = await loadForum(start);
   const decoded = decodeEnvelope(options.code);
   if (!isRecord(decoded) || !isRecord(decoded.payload) || typeof decoded.digest !== "string") {
-    throw new ForumError("AF_INVITE_FORMAT", "Join Code envelope is malformed", 2);
+    throw new ForumError("MAF_INVITE_FORMAT", "Join Code envelope is malformed", 2);
   }
   const payload = decoded.payload;
   const digest = sha256(JSON.stringify(payload));
   if (digest !== decoded.digest) {
-    throw new ForumError("AF_INVITE_TAMPERED", "Join Code digest does not match its payload", 2);
+    throw new ForumError("MAF_INVITE_TAMPERED", "Join Code digest does not match its payload", 2);
   }
   const invitationId = requireString(payload.invitation_id, "invitation_id");
   if (payload.forum_id !== forum.forum_id || payload.protocol_version !== PROTOCOL_VERSION) {
-    throw new ForumError("AF_INVITE_TARGET", "Join Code targets a different Forum or protocol", 2);
+    throw new ForumError("MAF_INVITE_TARGET", "Join Code targets a different Forum or protocol", 2);
   }
   const invitationPath = safePath(root, "invitations", `${invitationId}.yaml`);
   if (!(await pathExists(invitationPath))) {
-    throw new ForumError("AF_INVITATION_MISSING", `invitation not found: ${invitationId}`, 2);
+    throw new ForumError("MAF_INVITATION_MISSING", `invitation not found: ${invitationId}`, 2);
   }
   const invitation = await readYaml<Record<string, unknown>>(invitationPath);
   assertSchema("invitation", invitation, relative(root, invitationPath));
   if (invitation.digest !== digest || invitation.status !== "active") {
-    throw new ForumError("AF_INVITE_REVOKED", "invitation is revoked or does not match", 2);
+    throw new ForumError("MAF_INVITE_REVOKED", "invitation is revoked or does not match", 2);
   }
   if (new Date(requireString(invitation.expires_at, "expires_at")).getTime() <= Date.now()) {
-    throw new ForumError("AF_INVITE_EXPIRED", "invitation has expired", 2);
+    throw new ForumError("MAF_INVITE_EXPIRED", "invitation has expired", 2);
   }
   const agentId = assertIdentifier(options.agentId, "agent id");
   if (await pathExists(safePath(root, "agents", `${agentId}.yaml`))) {
-    throw new ForumError("AF_AGENT_EXISTS", `agent already exists: ${agentId}`, 2);
+    throw new ForumError("MAF_AGENT_EXISTS", `agent already exists: ${agentId}`, 2);
   }
   const requestId = makeRecordId("join");
   const metadata: Record<string, unknown> = {
@@ -915,7 +915,7 @@ export async function guardForum(start?: string): Promise<Record<string, unknown
   const { root } = await loadForum(start);
   const validation = await validateForum(root);
   if (!validation.ok) {
-    throw new ForumError("AF_VALIDATION_FAILED", "Forum validation failed", 2, validation.errors);
+    throw new ForumError("MAF_VALIDATION_FAILED", "Forum validation failed", 2, validation.errors);
   }
   try {
     execFileSync("git", ["rev-parse", "--verify", "HEAD"], {
@@ -924,7 +924,7 @@ export async function guardForum(start?: string): Promise<Record<string, unknown
     });
   } catch {
     throw new ForumError(
-      "AF_GIT_BASELINE",
+      "MAF_GIT_BASELINE",
       "guard needs an initial Git commit before it can prove immutability",
       2,
     );
@@ -955,7 +955,7 @@ export async function guardForum(start?: string): Promise<Record<string, unknown
   }
   if (violations.length > 0) {
     throw new ForumError(
-      "AF_GUARD_REJECTED",
+      "MAF_GUARD_REJECTED",
       "guard rejected protected history changes",
       2,
       violations,

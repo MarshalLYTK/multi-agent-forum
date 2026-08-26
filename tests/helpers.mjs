@@ -2,7 +2,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-export async function temporaryDirectory(prefix = "agent-forum-test-") {
+export async function temporaryDirectory(prefix = "multi-agent-forum-test-") {
   return mkdtemp(join(tmpdir(), prefix));
 }
 

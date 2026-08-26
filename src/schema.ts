@@ -38,9 +38,9 @@ function renderErrors(errors: ErrorObject[] | null | undefined): string {
 
 export function assertSchema(name: SchemaName, value: unknown, label: string = name): void {
   const validator = validators.get(name);
-  if (!validator) throw new ForumError("AF_SCHEMA_MISSING", `schema not loaded: ${name}`, 1);
+  if (!validator) throw new ForumError("MAF_SCHEMA_MISSING", `schema not loaded: ${name}`, 1);
   if (!validator(value)) {
-    throw new ForumError("AF_SCHEMA", `${label}: ${renderErrors(validator.errors)}`, 2, {
+    throw new ForumError("MAF_SCHEMA", `${label}: ${renderErrors(validator.errors)}`, 2, {
       schema: name,
       errors: validator.errors,
     });

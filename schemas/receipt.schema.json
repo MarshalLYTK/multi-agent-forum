@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agent-forum.dev/schemas/receipt.v1.json",
+  "$id": "https://multi-agent-forum.dev/schemas/receipt.v1.json",
   "type": "object",
   "additionalProperties": false,
   "required": ["agent", "summary", "evidence", "outcome", "work_status", "next_owner", "next_step", "confidence"],

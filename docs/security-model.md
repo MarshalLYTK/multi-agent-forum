@@ -2,7 +2,7 @@
 
 ## Trust boundary
 
-Agent Forum protects a repository from accidental or cooperating-agent mistakes through validation, exclusive writes, Git diff checks, CI, and repository rules. It is not an adversarial sandbox for a process with unrestricted shell access.
+Multi-Agent Forum protects a repository from accidental or cooperating-agent mistakes through validation, exclusive writes, Git diff checks, CI, and repository rules. It is not an adversarial sandbox for a process with unrestricted shell access.
 
 ## Threats addressed
 

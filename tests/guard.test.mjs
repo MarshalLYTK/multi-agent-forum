@@ -22,7 +22,7 @@ test("guard rejects modification of an existing response", async () => {
   const root = join(parent, "forum");
   await initForum({ directory: root, owner: "owner", git: true });
   git(root, "config", "user.email", "tests@example.invalid");
-  git(root, "config", "user.name", "Agent Forum Tests");
+  git(root, "config", "user.name", "Multi-Agent Forum Tests");
   await addAgent(root, { id: "codex", name: "Codex", type: "ai" });
   await createTopic(root, {
     id: "guard",
@@ -46,7 +46,7 @@ test("guard rejects modification of an existing response", async () => {
   await appendFile(join(root, response.path), "\nmodified after commit\n");
   await assert.rejects(
     () => guardForum(root),
-    (error) => error.code === "AF_GUARD_REJECTED" && error.details[0].includes("responses"),
+    (error) => error.code === "MAF_GUARD_REJECTED" && error.details[0].includes("responses"),
   );
 });
 
@@ -56,7 +56,7 @@ test("guard allows new immutable records after a baseline commit", async () => {
   const root = join(parent, "forum");
   await initForum({ directory: root, owner: "owner", git: true });
   git(root, "config", "user.email", "tests@example.invalid");
-  git(root, "config", "user.name", "Agent Forum Tests");
+  git(root, "config", "user.name", "Multi-Agent Forum Tests");
   await addAgent(root, { id: "codex", name: "Codex", type: "ai" });
   await createTopic(root, {
     id: "guard",

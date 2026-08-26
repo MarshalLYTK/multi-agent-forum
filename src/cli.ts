@@ -49,7 +49,7 @@ function parseArguments(tokens: string[]): ParsedArguments {
     }
     const value = tokens[index + 1];
     if (!value || value.startsWith("--")) {
-      throw new ForumError("AF_OPTION_VALUE", `--${key} requires a value`, 2);
+      throw new ForumError("MAF_OPTION_VALUE", `--${key} requires a value`, 2);
     }
     options.set(key, value);
     index += 1;
@@ -60,20 +60,20 @@ function parseArguments(tokens: string[]): ParsedArguments {
 function option(parsed: ParsedArguments, key: string, required = false): string | undefined {
   const value = parsed.options.get(key);
   if (typeof value === "string") return value;
-  if (required) throw new ForumError("AF_REQUIRED_OPTION", `--${key} is required`, 2);
+  if (required) throw new ForumError("MAF_REQUIRED_OPTION", `--${key} is required`, 2);
   return undefined;
 }
 
 function positional(parsed: ParsedArguments, index: number, label: string): string {
   const value = parsed.positionals[index];
-  if (!value) throw new ForumError("AF_REQUIRED_ARGUMENT", `${label} is required`, 2);
+  if (!value) throw new ForumError("MAF_REQUIRED_ARGUMENT", `${label} is required`, 2);
   return value;
 }
 
 function agentType(value: string | undefined): AgentType {
   const normalized = value ?? "ai";
   if (normalized !== "human" && normalized !== "ai") {
-    throw new ForumError("AF_AGENT_TYPE", "agent type must be human or ai", 2);
+    throw new ForumError("MAF_AGENT_TYPE", "agent type must be human or ai", 2);
   }
   return normalized;
 }
@@ -81,35 +81,35 @@ function agentType(value: string | undefined): AgentType {
 function actionStatus(value: string): ActionStatus {
   const statuses: ActionStatus[] = ["proposed", "ready", "doing", "waiting", "done", "cancelled"];
   if (!statuses.includes(value as ActionStatus)) {
-    throw new ForumError("AF_ACTION_STATUS", `invalid action status: ${value}`, 2);
+    throw new ForumError("MAF_ACTION_STATUS", `invalid action status: ${value}`, 2);
   }
   return value as ActionStatus;
 }
 
 function printHelp(): void {
-  process.stdout.write(`Agent Forum ${VERSION}
+  process.stdout.write(`Multi-Agent Forum ${VERSION}
 
 Usage:
-  agent-forum init [directory] --owner <id> [--name <name>] [--repository <url>]
-  agent-forum doctor [--root <path>]
-  agent-forum agent add <id> --name <name> [--type human|ai] [--runtime <name>]
-  agent-forum agent list
-  agent-forum agent show <id>
-  agent-forum topic create <id> --title <text> --owner <id> --resolution-owner <id>
-  agent-forum topic list
-  agent-forum topic show <id>
-  agent-forum response create --topic <id> --agent <id> --kind <kind> --summary <text>
+  multi-agent-forum init [directory] --owner <id> [--name <name>] [--repository <url>]
+  multi-agent-forum doctor [--root <path>]
+  multi-agent-forum agent add <id> --name <name> [--type human|ai] [--runtime <name>]
+  multi-agent-forum agent list
+  multi-agent-forum agent show <id>
+  multi-agent-forum topic create <id> --title <text> --owner <id> --resolution-owner <id>
+  multi-agent-forum topic list
+  multi-agent-forum topic show <id>
+  multi-agent-forum response create --topic <id> --agent <id> --kind <kind> --summary <text>
                               --evidence <text> --outcome <text> --next <text>
-  agent-forum receipt import <json-file> --topic <id> --submitted-by <id>
-  agent-forum resolve --topic <id> --owner <id> --summary <text> --decision <text>
-  agent-forum action create --topic <id> --title <text> --owner <id> --created-by <id>
-  agent-forum action list --topic <id>
-  agent-forum action update <id> --topic <id> --status <status> [--note <text>]
-  agent-forum invite create --scope <text> --expires <iso-date> --created-by <id>
-  agent-forum invite revoke <id>
-  agent-forum join <AF1_code> --agent <id> --name <name> [--type human|ai]
-  agent-forum validate [--root <path>]
-  agent-forum guard [--root <path>]
+  multi-agent-forum receipt import <json-file> --topic <id> --submitted-by <id>
+  multi-agent-forum resolve --topic <id> --owner <id> --summary <text> --decision <text>
+  multi-agent-forum action create --topic <id> --title <text> --owner <id> --created-by <id>
+  multi-agent-forum action list --topic <id>
+  multi-agent-forum action update <id> --topic <id> --status <status> [--note <text>]
+  multi-agent-forum invite create --scope <text> --expires <iso-date> --created-by <id>
+  multi-agent-forum invite revoke <id>
+  multi-agent-forum join <MAF1_code> --agent <id> --name <name> [--type human|ai]
+  multi-agent-forum validate [--root <path>]
+  multi-agent-forum guard [--root <path>]
 
 Global options:
   --root <path>  Start Forum discovery from this path
@@ -280,7 +280,7 @@ async function run(): Promise<void> {
   } else if (command === "guard") {
     result = await guardForum(root);
   } else {
-    throw new ForumError("AF_COMMAND", `unknown command: ${parsed.positionals.join(" ")}`, 2);
+    throw new ForumError("MAF_COMMAND", `unknown command: ${parsed.positionals.join(" ")}`, 2);
   }
 
   output(result, json);
@@ -299,7 +299,7 @@ run().catch((error: unknown) => {
       `${JSON.stringify({ ok: false, error: { code: forumError.code, message: forumError.message, details: forumError.details } }, null, 2)}\n`,
     );
   } else {
-    process.stderr.write(`agent-forum: ${forumError.message} [${forumError.code}]\n`);
+    process.stderr.write(`multi-agent-forum: ${forumError.message} [${forumError.code}]\n`);
     if (forumError.details)
       process.stderr.write(`${JSON.stringify(forumError.details, null, 2)}\n`);
   }

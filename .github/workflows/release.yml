@@ -22,4 +22,4 @@ jobs:
       - name: Attach tarball to the GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "${GITHUB_REF_NAME}" agent-forum-*.tgz --clobber
+        run: gh release upload "${GITHUB_REF_NAME}" multi-agent-forum-*.tgz --clobber

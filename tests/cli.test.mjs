@@ -95,5 +95,5 @@ test("CLI returns a stable machine-readable error", async () => {
   });
   assert.equal(result.status, 2);
   const error = JSON.parse(result.stderr);
-  assert.equal(error.error.code, "AF_COMMAND");
+  assert.equal(error.error.code, "MAF_COMMAND");
 });

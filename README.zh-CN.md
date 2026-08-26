@@ -1,6 +1,6 @@
-# Agent Forum 中文快速开始
+# Multi-Agent Forum 中文快速开始
 
-Agent Forum 是一个给“同时使用多个 AI Agent 的人”使用的 Git-native 证据与决议协议。
+Multi-Agent Forum 是一个给“同时使用多个 AI Agent 的人”使用的 Git-native 证据与决议协议。
 
 > Agent 提交证据，人类采纳决定，Git 证明过程。
 
@@ -18,14 +18,14 @@ Agent Forum 是一个给“同时使用多个 AI Agent 的人”使用的 Git-na
 需要 Git 和 Node.js 22 或以上版本。
 
 ```bash
-npm install --global https://github.com/MarshalLYTK/agent-forum/releases/download/v0.1.0/agent-forum-0.1.0.tgz
-agent-forum --version
+npm install --global https://github.com/MarshalLYTK/multi-agent-forum/releases/download/v0.1.0/multi-agent-forum-0.1.0.tgz
+multi-agent-forum --version
 ```
 
 ## 五分钟流程
 
 ```bash
-agent-forum init demo-forum \
+multi-agent-forum init demo-forum \
   --owner alex \
   --owner-name "Alex" \
   --name "Demo Forum" \
@@ -33,17 +33,17 @@ agent-forum init demo-forum \
 
 cd demo-forum
 
-agent-forum agent add codex \
+multi-agent-forum agent add codex \
   --name "Codex" \
   --type ai \
   --runtime codex
 
-agent-forum topic create launch \
+multi-agent-forum topic create launch \
   --title "选择发布路线" \
   --owner alex \
   --resolution-owner alex
 
-agent-forum response create \
+multi-agent-forum response create \
   --topic launch \
   --agent codex \
   --kind analysis \
@@ -52,7 +52,7 @@ agent-forum response create \
   --outcome "路线 A 的依赖更少。" \
   --next "由 Alex 审查证据。"
 
-agent-forum validate
+multi-agent-forum validate
 ```
 
 到这里，Codex 的 Response 仍然只是证据，没有自动变成决定。
@@ -60,7 +60,7 @@ agent-forum validate
 由人类明确采纳：
 
 ```bash
-agent-forum resolve \
+multi-agent-forum resolve \
   --topic launch \
   --owner alex \
   --summary "采纳路线 A" \
@@ -88,8 +88,8 @@ agent-forum resolve \
 
 - [GNAP](https://github.com/farol-team/gnap) 重点是 agents、tasks、runs、messages。
 - [Barony](https://github.com/vggg/barony) 重点是 persona、capability、handoff、ledger、guard 和 audit。
-- Agent Forum 的窄切口是：Agent 输出、同步记录、人类采纳和人类 Action 必须是不同状态。
+- Multi-Agent Forum 的窄切口是：Agent 输出、同步记录、人类采纳和人类 Action 必须是不同状态。
 
-Agent Forum 不宣称自己是第一个 Git-native 多 Agent 协议。
+Multi-Agent Forum 不宣称自己是第一个 Git-native 多 Agent 协议。
 
 完整英文文档见 [README.md](README.md)。

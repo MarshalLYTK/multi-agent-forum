@@ -22,7 +22,7 @@ export function safePath(root: string, ...segments: string[]): string {
   const target = resolve(root, ...segments);
   const rel = relative(resolve(root), target);
   if (rel === "" || (!rel.startsWith("..") && !isAbsolute(rel))) return target;
-  throw new ForumError("AF_PATH_ESCAPE", `path escapes Forum root: ${target}`, 2);
+  throw new ForumError("MAF_PATH_ESCAPE", `path escapes Forum root: ${target}`, 2);
 }
 
 export async function pathExists(target: string): Promise<boolean> {
@@ -39,7 +39,7 @@ export async function discoverForumRoot(start = process.cwd()): Promise<string> 
   try {
     if ((await stat(current)).isFile()) current = dirname(current);
   } catch {
-    throw new ForumError("AF_PATH_MISSING", `path does not exist: ${current}`, 2);
+    throw new ForumError("MAF_PATH_MISSING", `path does not exist: ${current}`, 2);
   }
   while (true) {
     if (await pathExists(resolve(current, "forum.yaml"))) return current;
@@ -47,13 +47,13 @@ export async function discoverForumRoot(start = process.cwd()): Promise<string> 
     if (parent === current) break;
     current = parent;
   }
-  throw new ForumError("AF_NOT_A_FORUM", `forum.yaml not found from ${start}`, 2);
+  throw new ForumError("MAF_NOT_A_FORUM", `forum.yaml not found from ${start}`, 2);
 }
 
 export async function readTextLimited(target: string, limit = RECORD_SIZE_LIMIT): Promise<string> {
   const info = await stat(target);
   if (info.size > limit) {
-    throw new ForumError("AF_FILE_TOO_LARGE", `${target} exceeds ${limit} bytes`, 2);
+    throw new ForumError("MAF_FILE_TOO_LARGE", `${target} exceeds ${limit} bytes`, 2);
   }
   return readFile(target, "utf8");
 }
@@ -63,7 +63,7 @@ export async function readYaml<T>(target: string): Promise<T> {
   try {
     return YAML.parse(text) as T;
   } catch (error) {
-    throw new ForumError("AF_INVALID_YAML", `${target}: ${String(error)}`, 2);
+    throw new ForumError("MAF_INVALID_YAML", `${target}: ${String(error)}`, 2);
   }
 }
 
@@ -77,12 +77,12 @@ export async function writeNew(target: string, content: string): Promise<void> {
   } catch (error) {
     if (handle) await handle.close().catch(() => undefined);
     if ((error as NodeJS.ErrnoException).code === "EEXIST") {
-      throw new ForumError("AF_IMMUTABLE_EXISTS", `refusing to overwrite ${target}`, 2);
+      throw new ForumError("MAF_IMMUTABLE_EXISTS", `refusing to overwrite ${target}`, 2);
     }
     await rm(target, { force: true }).catch(() => undefined);
     throw error;
   }
-  if (!handle) throw new ForumError("AF_WRITE_FAILED", `could not open ${target}`, 1);
+  if (!handle) throw new ForumError("MAF_WRITE_FAILED", `could not open ${target}`, 1);
   await handle.close();
 }
 
@@ -117,13 +117,13 @@ export function parseMarkdown(
   body: string;
 } {
   if (!text.startsWith("---\n")) {
-    throw new ForumError("AF_FRONTMATTER", `${target}: missing YAML frontmatter`, 2);
+    throw new ForumError("MAF_FRONTMATTER", `${target}: missing YAML frontmatter`, 2);
   }
   const end = text.indexOf("\n---\n", 4);
-  if (end < 0) throw new ForumError("AF_FRONTMATTER", `${target}: unterminated frontmatter`, 2);
+  if (end < 0) throw new ForumError("MAF_FRONTMATTER", `${target}: unterminated frontmatter`, 2);
   const parsed = YAML.parse(text.slice(4, end));
   if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-    throw new ForumError("AF_FRONTMATTER", `${target}: frontmatter must be an object`, 2);
+    throw new ForumError("MAF_FRONTMATTER", `${target}: frontmatter must be an object`, 2);
   }
   return { metadata: parsed as Record<string, unknown>, body: text.slice(end + 5).trim() };
 }
@@ -154,7 +154,7 @@ export async function assertNoSymlinks(root: string): Promise<void> {
       const target = safePath(root, relative(root, directory), entry.name);
       const info = await lstat(target);
       if (info.isSymbolicLink()) {
-        throw new ForumError("AF_SYMLINK", `symlink is not allowed: ${relative(root, target)}`, 2);
+        throw new ForumError("MAF_SYMLINK", `symlink is not allowed: ${relative(root, target)}`, 2);
       }
       if (info.isDirectory()) await walk(target);
     }

@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for helping improve Agent Forum.
+Thank you for helping improve Multi-Agent Forum.
 
 ## Before opening a pull request
 

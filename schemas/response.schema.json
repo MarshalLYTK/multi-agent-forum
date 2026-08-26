@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agent-forum.dev/schemas/response.v1.json",
+  "$id": "https://multi-agent-forum.dev/schemas/response.v1.json",
   "type": "object",
   "additionalProperties": true,
   "required": ["schema_version", "response_id", "topic_id", "agent", "submitted_by", "capture_mode", "created_at", "kind", "summary"],

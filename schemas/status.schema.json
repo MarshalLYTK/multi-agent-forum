@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agent-forum.dev/schemas/status.v1.json",
+  "$id": "https://multi-agent-forum.dev/schemas/status.v1.json",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "topic_id", "state", "owner", "resolution_owner", "updated_at"],

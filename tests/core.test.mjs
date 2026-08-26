@@ -115,7 +115,7 @@ test("runs the evidence-to-decision flow without promoting a response", async ()
         outcome: "None",
         next: "None",
       }),
-    (error) => error.code === "AF_TOPIC_CLOSED",
+    (error) => error.code === "MAF_TOPIC_CLOSED",
   );
 
   const validation = await validateForum(root);
@@ -152,7 +152,7 @@ test("only the declared resolution owner can resolve a topic", async () => {
         summary: "Unauthorized",
         decision: "This must not be adopted.",
       }),
-    (error) => error.code === "AF_RESOLUTION_OWNER",
+    (error) => error.code === "MAF_RESOLUTION_OWNER",
   );
 });
 
