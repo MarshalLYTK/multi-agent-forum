@@ -901,6 +901,7 @@ export async function validateForum(start?: string): Promise<ValidationResult> {
     safePath(root, "join-requests"),
   ];
   for (const scanRoot of scanRoots) {
+    if (!(await pathExists(scanRoot))) continue;
     const info = await stat(scanRoot);
     const paths = info.isDirectory() ? await walkRecordFiles(root, scanRoot) : [scanRoot];
     for (const path of paths) scanText(relative(root, path), await readTextLimited(path), errors);

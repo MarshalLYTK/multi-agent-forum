@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { writeFile } from "node:fs/promises";
+import { rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { afterEach, test } from "node:test";
 import {
@@ -154,4 +154,18 @@ test("only the declared resolution owner can resolve a topic", async () => {
       }),
     (error) => error.code === "AF_RESOLUTION_OWNER",
   );
+});
+
+test("validates a clean checkout when optional record directories are absent", async () => {
+  const parent = await temporaryDirectory();
+  temporaryDirectories.push(parent);
+  const root = join(parent, "forum");
+  await initForum({ directory: root, owner: "owner", git: false });
+  await rm(join(root, "invitations"), { recursive: true });
+  await rm(join(root, "join-requests"), { recursive: true });
+
+  const validation = await validateForum(root);
+  assert.equal(validation.ok, true, validation.errors.join("\n"));
+  assert.equal(validation.counts.invitations, 0);
+  assert.equal(validation.counts.joinRequests, 0);
 });
